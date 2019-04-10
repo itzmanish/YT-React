@@ -1,17 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import plyr from 'plyr';
 import axios from 'axios';
 import PlayerComp from '../components/Player';
 import './Player.css';
 
-const video = new React.createRef();
-
 const Player = () => {
+  const video = useRef();
+  const [videoData, setVideo] = useState([]);
+
   useEffect(() => {
-    const player = new plyr(video.current);
+    new plyr(video.current);
+    fetchVideo();
   }, []);
 
-  fetchVideo = url => {};
+  const fetchVideo = async () => {
+    const response = await axios.post('http://localhost:5000/search', {
+      link: 'https://www.youtube.com/watch?v=uIHPPtPBgHk'
+    });
+    const data = await response.data;
+    setVideo(data);
+    console.log(data);
+  };
 
   return (
     <div className="player">
