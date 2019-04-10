@@ -1,15 +1,21 @@
-import React, { Component } from 'react';
-import SearchAppBar from './components/Header';
+import React, { useState } from 'react';
+import SearchBar from './container/SearchBar';
 import Player from './container/Player';
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <SearchAppBar />
-        <Player />
-      </div>
-    );
-  }
-}
+import { YTProvider, YTConsumer } from './store/context';
+
+const App = () => {
+  const [videoData, setVideoData] = useState({});
+
+  return (
+    <YTProvider value={{ videoData, setVideoData }}>
+      <SearchBar />
+      <YTConsumer>
+        {({ videoData, setVideoData }) => (
+          <Player video={videoData} setVideo={setVideoData} />
+        )}
+      </YTConsumer>
+    </YTProvider>
+  );
+};
 
 export default App;

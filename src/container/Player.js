@@ -1,38 +1,30 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import plyr from 'plyr';
-import axios from 'axios';
 import PlayerComp from '../components/Player';
 import './Player.css';
 
-const Player = () => {
-  const video = useRef();
-  const [videoData, setVideo] = useState([]);
+const Player = ({ video, setVideo }) => {
+  const videoref = useRef();
 
   useEffect(() => {
-    new plyr(video.current);
-    fetchVideo();
-  }, []);
-
-  const fetchVideo = async () => {
-    const response = await axios.post('http://localhost:5000/search', {
-      link: 'https://www.youtube.com/watch?v=uIHPPtPBgHk'
-    });
-    const data = await response.data;
-    setVideo(data);
-    console.log(data);
-  };
+    new plyr(videoref.current);
+    console.log('reloaded');
+    console.log(video);
+  }, [video]);
 
   return (
     <div className="player">
       <div className="container">
         <video
-          ref={video}
+          ref={videoref}
           controls
-          crossOrigin
+          crossOrigin="False"
           playsInline
-          poster="http://i.ytimg.com/vi/Bey4XXJAqS8/default.jpg"
+          poster={video.Thumbnail}
         >
-          <PlayerComp />
+          {video.url
+            ? video.url.map((url, key) => <PlayerComp {...url} key={key} />)
+            : null}
         </video>
       </div>
     </div>
